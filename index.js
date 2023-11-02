@@ -62,6 +62,30 @@ app.get("/newRecipe", async (req, res) => {
   }
 });
 
+// Get latest recipe
+app.get("/latestRecipe", async (req, res) => {
+  try {
+    const newRecipe =
+      await database`SELECT * FROM recipe ORDER BY id DESC LIMIT 1`;
+    const newRecipeId = newRecipe[0].id;
+
+    const request =
+      await database`SELECT * FROM recipe WHERE id < ${newRecipeId} ORDER BY id DESC`;
+
+    res.status(200).json({
+      status: true,
+      message: "Get data success",
+      data: request,
+    });
+  } catch (error) {
+    res.status(502).json({
+      status: false,
+      message: "Something wrong in our server",
+      data: [],
+    });
+  }
+});
+
 app.listen(port, () => {
   console.log(`Example app listening on port localhost:${port}`);
 });
