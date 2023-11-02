@@ -42,6 +42,26 @@ app.get("/recipe/:id", async (req, res) => {
   }
 });
 
+// Get New Recipe
+app.get("/newRecipe", async (req, res) => {
+  try {
+    const request =
+      await database`SELECT * FROM recipe ORDER BY id DESC LIMIT 1`;
+
+    res.status(200).json({
+      status: true,
+      message: "Get data success",
+      data: request,
+    });
+  } catch (error) {
+    res.status(502).json({
+      status: false,
+      message: "Something wrong in our server",
+      data: [],
+    });
+  }
+});
+
 app.listen(port, () => {
   console.log(`Example app listening on port localhost:${port}`);
 });
