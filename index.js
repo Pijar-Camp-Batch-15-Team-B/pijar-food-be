@@ -1,13 +1,11 @@
+require("dotenv").config();
+
 const express = require("express");
 const app = express();
-const port = 3000;
+const port = process.env.PORT;
 const database = require("./database");
 const cors = require("cors");
-
-const corsOptions = {
-  origin: "*",
-  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-};
+const helmet = require("helmet");
 
 // grant access for express can accept input from outside
 app.use(express.urlencoded({ extended: false }));
@@ -15,8 +13,16 @@ app.use(express.urlencoded({ extended: false }));
 // parse application/json
 app.use(express.json());
 
-// cors
-app.use(cors(corsOptions));
+// grant access for all client using this resource
+app.use(
+  cors({
+    origin: "*",
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  })
+);
+
+// using helmet
+app.use(helmet());
 
 // Get All recipe
 app.get("/recipe", async (req, res) => {
@@ -102,5 +108,5 @@ app.get("/latestRecipe", async (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`Example app listening on port localhost:${port}`);
+  console.log(`Example app listening on http//:localhost:${port}`);
 });
