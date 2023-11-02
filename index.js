@@ -2,6 +2,21 @@ const express = require("express");
 const app = express();
 const port = 3000;
 const database = require("./database");
+const cors = require("cors");
+
+const corsOptions = {
+  origin: "*",
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+};
+
+// grant access for express can accept input from outside
+app.use(express.urlencoded({ extended: false }));
+
+// parse application/json
+app.use(express.json());
+
+// cors
+app.use(cors(corsOptions));
 
 // Get All recipe
 app.get("/recipe", async (req, res) => {
