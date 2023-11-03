@@ -160,7 +160,7 @@ app.post("/comment", async (req, res) => {
 });
 
 //Get comment by recipe id
-app.get("/comment/:id", async (req, res) => {
+app.get("/recipe/comment/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const request =
