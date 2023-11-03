@@ -10,6 +10,9 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { Validator } = require("node-input-validator");
 
+//import router
+const recipeRouter = require('./routers/recipe')
+
 // grant access for express can accept input from outside
 app.use(express.urlencoded({ extended: false }));
 
@@ -26,6 +29,7 @@ app.use(
 
 // using helmet
 app.use(helmet());
+app.use(recipeRouter)
 
 // Middleware Function
 const checkJwt = async (req, res, next) => {
@@ -51,116 +55,6 @@ const checkJwt = async (req, res, next) => {
   }
 };
 
-// ENDPOINT RECIPE
-// Get All recipe
-app.get("/recipe", async (req, res) => {
-  try {
-    const request = await database`SELECT * FROM recipe`;
-
-    res.status(200).json({
-      status: true,
-      message: "Get data success",
-      data: request,
-    });
-  } catch (error) {
-    res.status(502).json({
-      status: false,
-      message: "Something wrong in our server",
-      data: [],
-    });
-  }
-});
-
-// Get detail recipe
-app.get("/recipe/:id", async (req, res) => {
-  try {
-    const { id } = req.params;
-    const request = await database`SELECT * FROM recipe WHERE id = ${id}`;
-
-    res.status(200).json({
-      status: true,
-      message: "Get data success",
-      data: request,
-    });
-  } catch (error) {
-    res.status(502).json({
-      status: false,
-      message: "Something wrong in our server",
-      data: [],
-    });
-  }
-});
-
-// Get New Recipe
-app.get("/newRecipe", async (req, res) => {
-  try {
-    const request =
-      await database`SELECT * FROM recipe ORDER BY id DESC LIMIT 1`;
-
-    res.status(200).json({
-      status: true,
-      message: "Get data success",
-      data: request,
-    });
-  } catch (error) {
-    res.status(502).json({
-      status: false,
-      message: "Something wrong in our server",
-      data: [],
-    });
-  }
-});
-
-// Get latest recipe
-app.get("/latestRecipe", async (req, res) => {
-  try {
-    const newRecipe =
-      await database`SELECT * FROM recipe ORDER BY id DESC LIMIT 1`;
-    const newRecipeId = newRecipe[0].id;
-
-    const request =
-      await database`SELECT * FROM recipe WHERE id < ${newRecipeId} ORDER BY id DESC`;
-
-    res.status(200).json({
-      status: true,
-      message: "Get data success",
-      data: request,
-    });
-  } catch (error) {
-    res.status(502).json({
-      status: false,
-      message: "Something wrong in our server",
-      data: [],
-    });
-  }
-});
-
-//Add recipe
-app.post("/recipe", async (req, res) => {
-  try {
-    const { title, ingridients, image, video_url } = req.body;
-
-    const request =
-      await database`INSERT INTO recipe (title, ingridients, image, video_url)
-      values
-      (${title}, ${ingridients}, ${image}, ${video_url}) RETURNING id`;
-
-    if (request.length > 0) {
-      res.status(201).json({
-        status: true,
-        message: "Insert Data Success",
-      });
-
-      return;
-    }
-  } catch (error) {
-    res.status(502).json({
-      status: false,
-      message: "Something Wrong on our server",
-      data: [],
-    });
-  }
-});
 
 //ENDPOINT COMMENT
 //Add comment
