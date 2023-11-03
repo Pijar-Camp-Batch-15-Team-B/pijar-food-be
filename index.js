@@ -159,6 +159,27 @@ app.post("/comment", async (req, res) => {
   }
 });
 
+//Get comment by recipe id
+app.get("/comment/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const request =
+      await database`SELECT * FROM comment WHERE recipe_id = ${id}`;
+
+    res.status(200).json({
+      status: true,
+      message: "Get data success",
+      data: request,
+    });
+  } catch (error) {
+    res.status(502).json({
+      status: false,
+      message: "Something wrong in our server",
+      data: [],
+    });
+  }
+});
+
 app.listen(port, () => {
   console.log(`Example app listening on http//:localhost:${port}`);
 });
