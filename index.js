@@ -24,6 +24,7 @@ app.use(
 // using helmet
 app.use(helmet());
 
+// ENDPOINT RECIPE
 // Get All recipe
 app.get("/recipe", async (req, res) => {
   try {
@@ -102,6 +103,31 @@ app.get("/latestRecipe", async (req, res) => {
     res.status(502).json({
       status: false,
       message: "Something wrong in our server",
+      data: [],
+    });
+  }
+});
+
+//Add recipe
+app.post("/recipe", async (req, res) => {
+  try {
+    const { title, ingridients, image, video_url } = req.body;
+
+    const request =
+      await database`INSERT INTO recipe (title, ingridients, image, video_url)
+      values
+      (${title}, ${ingridients}, ${image}, ${video_url}) RETURNING id`;
+
+    if (request.length > 0) {
+      res.status(201).json({
+        status: true,
+        message: "Insert Data Success",
+      });
+    }
+  } catch (error) {
+    res.status(502).json({
+      status: false,
+      message: "Something Wrong on our server",
       data: [],
     });
   }
