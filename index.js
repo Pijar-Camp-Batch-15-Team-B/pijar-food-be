@@ -7,6 +7,7 @@ const database = require("./database");
 const cors = require("cors");
 const helmet = require("helmet");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 // grant access for express can accept input from outside
 app.use(express.urlencoded({ extended: false }));
@@ -24,6 +25,30 @@ app.use(
 
 // using helmet
 app.use(helmet());
+
+// Middleware Function
+const checkJwt = async (req, res, next) => {
+  try {
+    const token = req.headers.authorization.slice(7);
+    const decoded = jwt.verify(token, process.env.APP_SECRET_TOKEN);
+
+    if (decoded) {
+      next();
+    } else {
+      res.status(401).json({
+        status: false,
+        message: "Token error",
+        data: [],
+      });
+    }
+  } catch (error) {
+    res.status(401).json({
+      status: false,
+      message: "Token error",
+      data: [],
+    });
+  }
+};
 
 // ENDPOINT RECIPE
 // Get All recipe
@@ -269,9 +294,12 @@ app.post("/users/login", async (req, res) => {
     const isMatch = bcrypt.compareSync(password, checkEmail[0].password);
 
     if (isMatch) {
+      const token = jwt.sign(checkEmail[0], process.env.APP_SECRET_TOKEN);
+
       res.status(200).json({
         status: true,
         message: "Login success",
+        accessToken: token,
         data: checkEmail,
       });
     } else {
@@ -290,6 +318,27 @@ app.post("/users/login", async (req, res) => {
 });
 
 // Get detail user
+app.get("/users/me", checkJwt, async (req, res) => {
+  try {
+    const token = req.headers.authorization.slice(7);
+    const decoded = jwt.verify(token, process.env.APP_SECRET_TOKEN);
+
+    const request =
+      await database`SELECT * FROM users WHERE id = ${decoded.id}`;
+
+    res.status(200).json({
+      status: true,
+      message: "Get data success",
+      data: request,
+    });
+  } catch (error) {
+    res.status(502).json({
+      status: false,
+      message: "Something wrong in our server",
+      data: [],
+    });
+  }
+});
 
 app.listen(port, () => {
   console.log(`Example app listening on http//:localhost:${port}`);
