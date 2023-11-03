@@ -8,6 +8,7 @@ const cors = require("cors");
 const helmet = require("helmet");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const { Validator } = require("node-input-validator");
 
 // grant access for express can accept input from outside
 app.use(express.urlencoded({ extended: false }));
@@ -232,90 +233,134 @@ app.get("/users", async (req, res) => {
 });
 
 // Register
-app.post("/users/register", async (req, res) => {
-  try {
-    const { username, email, phone_number, password } = req.body;
+app.post(
+  "/users/register",
+  async (req, res, next) => {
+    const schema = new Validator(req.body, {
+      username: "required|minLength:1|maxLength:100",
+      email: "required|email",
+      phone_number: "required|phoneNumber",
+      password: "required|minLength:5",
+    });
 
-    // check unique email
-    const checkEmail =
-      await database`SELECT * FROM users WHERE email = ${email}`;
+    schema.check().then((matched) => {
+      if (!matched) {
+        res.status(422).json({
+          status: false,
+          message: schema.errors,
+          data: null,
+        });
+      } else {
+        next();
+      }
+    });
+  },
+  async (req, res) => {
+    try {
+      const { username, email, phone_number, password } = req.body;
 
-    if (checkEmail.length > 0) {
-      res.status(400).json({
-        status: false,
-        message: "email already registered",
-      });
+      // check unique email
+      const checkEmail =
+        await database`SELECT * FROM users WHERE email = ${email}`;
 
-      return;
-    }
+      if (checkEmail.length > 0) {
+        res.status(400).json({
+          status: false,
+          message: "email already registered",
+        });
 
-    const saltRounds = 10;
-    const salt = bcrypt.genSaltSync(saltRounds);
-    const hash = bcrypt.hashSync(password, salt);
+        return;
+      }
 
-    const request =
-      await database`INSERT INTO users (username, email, phone_number, password)
+      const saltRounds = 10;
+      const salt = bcrypt.genSaltSync(saltRounds);
+      const hash = bcrypt.hashSync(password, salt);
+
+      const request =
+        await database`INSERT INTO users (username, email, phone_number, password)
       values
       (${username}, ${email}, ${phone_number}, ${hash}) RETURNING id`;
 
-    res.status(200).json({
-      status: true,
-      message: "Get data success",
-      data: request,
-    });
-  } catch (error) {
-    res.status(502).json({
-      status: false,
-      message: "Something wrong in our server",
-      data: [],
-    });
-  }
-});
-
-// Login
-app.post("/users/login", async (req, res) => {
-  try {
-    const { email, password } = req.body;
-
-    // check if email registered
-    const checkEmail =
-      await database`SELECT * FROM users WHERE email = ${email}`;
-
-    if (checkEmail.length == 0) {
-      res.status(400).json({
-        status: false,
-        message: "email not registered",
-      });
-
-      return;
-    }
-
-    // check if password correct
-    const isMatch = bcrypt.compareSync(password, checkEmail[0].password);
-
-    if (isMatch) {
-      const token = jwt.sign(checkEmail[0], process.env.APP_SECRET_TOKEN);
-
       res.status(200).json({
         status: true,
-        message: "Login success",
-        accessToken: token,
-        data: checkEmail,
+        message: "Get data success",
+        data: request,
       });
-    } else {
-      res.status(400).json({
+    } catch (error) {
+      res.status(502).json({
         status: false,
-        message: "password incorrect",
+        message: "Something wrong in our server",
+        data: [],
       });
     }
-  } catch (error) {
-    res.status(502).json({
-      status: false,
-      message: "Something wrong in our server",
-      data: [],
-    });
   }
-});
+);
+
+// Login
+app.post(
+  "/users/login",
+  async (req, res, next) => {
+    const schema = new Validator(req.body, {
+      email: "required|email",
+      password: "required|minLength:5",
+    });
+
+    schema.check().then((matched) => {
+      if (!matched) {
+        res.status(422).json({
+          status: false,
+          message: schema.errors,
+          data: null,
+        });
+      } else {
+        next();
+      }
+    });
+  },
+  async (req, res) => {
+    try {
+      const { email, password } = req.body;
+
+      // check if email registered
+      const checkEmail =
+        await database`SELECT * FROM users WHERE email = ${email}`;
+
+      if (checkEmail.length == 0) {
+        res.status(400).json({
+          status: false,
+          message: "email not registered",
+        });
+
+        return;
+      }
+
+      // check if password correct
+      const isMatch = bcrypt.compareSync(password, checkEmail[0].password);
+
+      if (isMatch) {
+        const token = jwt.sign(checkEmail[0], process.env.APP_SECRET_TOKEN);
+
+        res.status(200).json({
+          status: true,
+          message: "Login success",
+          accessToken: token,
+          data: checkEmail,
+        });
+      } else {
+        res.status(400).json({
+          status: false,
+          message: "password incorrect",
+        });
+      }
+    } catch (error) {
+      res.status(502).json({
+        status: false,
+        message: "Something wrong in our server",
+        data: [],
+      });
+    }
+  }
+);
 
 // Get detail user
 app.get("/users/me", checkJwt, async (req, res) => {
