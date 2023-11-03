@@ -133,6 +133,32 @@ app.post("/recipe", async (req, res) => {
   }
 });
 
+//ENDPOINT COMMENT
+//Add comment
+app.post("/comment", async (req, res) => {
+  try {
+    const { recipe_id, username, photo_profile, message } = req.body;
+
+    const request =
+      await database`INSERT INTO comment (recipe_id, username, photo_profile, message)
+      values
+      (${recipe_id}, ${username}, ${photo_profile}, ${message}) RETURNING id`;
+
+    if (request.length > 0) {
+      res.status(201).json({
+        status: true,
+        message: "Insert Data Success",
+      });
+    }
+  } catch (error) {
+    res.status(502).json({
+      status: false,
+      message: "Something Wrong on our server",
+      data: [],
+    });
+  }
+});
+
 app.listen(port, () => {
   console.log(`Example app listening on http//:localhost:${port}`);
 });
