@@ -6,6 +6,7 @@ const port = process.env.PORT;
 const database = require("./database");
 const cors = require("cors");
 const helmet = require("helmet");
+const bcrypt = require("bcrypt");
 
 // grant access for express can accept input from outside
 app.use(express.urlencoded({ extended: false }));
@@ -123,6 +124,8 @@ app.post("/recipe", async (req, res) => {
         status: true,
         message: "Insert Data Success",
       });
+
+      return;
     }
   } catch (error) {
     res.status(502).json({
@@ -149,6 +152,8 @@ app.post("/comment", async (req, res) => {
         status: true,
         message: "Insert Data Success",
       });
+
+      return;
     }
   } catch (error) {
     res.status(502).json({
@@ -181,7 +186,7 @@ app.get("/recipe/comment/:id", async (req, res) => {
 });
 
 // ENDPOINT AUTH
-// /users
+// Get all users
 app.get("/users", async (req, res) => {
   try {
     const request =
@@ -201,14 +206,32 @@ app.get("/users", async (req, res) => {
   }
 });
 
-// /register
+// Register
 app.post("/users/register", async (req, res) => {
   try {
     const { username, email, phone_number, password } = req.body;
+
+    // check unique email
+    const checkEmail =
+      await database`SELECT * FROM users WHERE email = ${email}`;
+
+    if (checkEmail.length > 0) {
+      res.status(400).json({
+        status: false,
+        message: "email already registered",
+      });
+
+      return;
+    }
+
+    const saltRounds = 10;
+    const salt = bcrypt.genSaltSync(saltRounds);
+    const hash = bcrypt.hashSync(password, salt);
+
     const request =
       await database`INSERT INTO users (username, email, phone_number, password)
       values
-      (${username}, ${email}, ${phone_number}, ${password}) RETURNING id`;
+      (${username}, ${email}, ${phone_number}, ${hash}) RETURNING id`;
 
     res.status(200).json({
       status: true,
@@ -224,9 +247,49 @@ app.post("/users/register", async (req, res) => {
   }
 });
 
-// /login
+// Login
+app.post("/users/login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
 
-// users/me
+    // check if email registered
+    const checkEmail =
+      await database`SELECT * FROM users WHERE email = ${email}`;
+
+    if (checkEmail.length == 0) {
+      res.status(400).json({
+        status: false,
+        message: "email not registered",
+      });
+
+      return;
+    }
+
+    // check if password correct
+    const isMatch = bcrypt.compareSync(password, checkEmail[0].password);
+
+    if (isMatch) {
+      res.status(200).json({
+        status: true,
+        message: "Login success",
+        data: checkEmail,
+      });
+    } else {
+      res.status(400).json({
+        status: false,
+        message: "password incorrect",
+      });
+    }
+  } catch (error) {
+    res.status(502).json({
+      status: false,
+      message: "Something wrong in our server",
+      data: [],
+    });
+  }
+});
+
+// Get detail user
 
 app.listen(port, () => {
   console.log(`Example app listening on http//:localhost:${port}`);
