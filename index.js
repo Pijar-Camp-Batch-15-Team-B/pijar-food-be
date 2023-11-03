@@ -180,6 +180,54 @@ app.get("/recipe/comment/:id", async (req, res) => {
   }
 });
 
+// ENDPOINT AUTH
+// /users
+app.get("/users", async (req, res) => {
+  try {
+    const request =
+      await database`SELECT username, phone_number, email, photo_profile FROM users`;
+
+    res.status(200).json({
+      status: true,
+      message: "Get data success",
+      data: request,
+    });
+  } catch (error) {
+    res.status(502).json({
+      status: false,
+      message: "Something wrong in our server",
+      data: [],
+    });
+  }
+});
+
+// /register
+app.post("/users/register", async (req, res) => {
+  try {
+    const { username, email, phone_number, password } = req.body;
+    const request =
+      await database`INSERT INTO users (username, email, phone_number, password)
+      values
+      (${username}, ${email}, ${phone_number}, ${password}) RETURNING id`;
+
+    res.status(200).json({
+      status: true,
+      message: "Get data success",
+      data: request,
+    });
+  } catch (error) {
+    res.status(502).json({
+      status: false,
+      message: "Something wrong in our server",
+      data: [],
+    });
+  }
+});
+
+// /login
+
+// users/me
+
 app.listen(port, () => {
   console.log(`Example app listening on http//:localhost:${port}`);
 });
