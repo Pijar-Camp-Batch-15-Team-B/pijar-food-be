@@ -1,4 +1,4 @@
-const database = require("../database");
+const authModel = require("../models/auth");
 
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -29,8 +29,7 @@ const authController = {
   },
   _getAllUser: async (req, res) => {
     try {
-      const request =
-        await database`SELECT username, phone_number, email, photo_profile FROM users`;
+      const request = await authModel.getAllUser();
 
       res.status(200).json({
         status: true,
@@ -65,7 +64,7 @@ const authController = {
       }
     });
   },
-  _inputValidationLogin : async (req, res, next) => {
+  _inputValidationLogin: async (req, res, next) => {
     const schema = new Validator(req.body, {
       email: "required|email",
       password: "required|minLength:5",
@@ -88,8 +87,7 @@ const authController = {
       const { username, email, phone_number, password } = req.body;
 
       // check unique email
-      const checkEmail =
-        await database`SELECT * FROM users WHERE email = ${email}`;
+      const checkEmail = await authModel.checkEmail(email);
 
       if (checkEmail.length > 0) {
         res.status(400).json({
@@ -104,10 +102,12 @@ const authController = {
       const salt = bcrypt.genSaltSync(saltRounds);
       const hash = bcrypt.hashSync(password, salt);
 
-      const request =
-        await database`INSERT INTO users (username, email, phone_number, password)
-        values
-        (${username}, ${email}, ${phone_number}, ${hash}) RETURNING id`;
+      const request = await authModel.regist({
+        username,
+        email,
+        phone_number,
+        hash,
+      });
 
       res.status(200).json({
         status: true,
@@ -122,13 +122,12 @@ const authController = {
       });
     }
   },
-  _login : async (req, res) => {
+  _login: async (req, res) => {
     try {
       const { email, password } = req.body;
 
       // check if email registered
-      const checkEmail =
-        await database`SELECT * FROM users WHERE email = ${email}`;
+      const checkEmail = await authModel.checkEmail(email);
 
       if (checkEmail.length == 0) {
         res.status(400).json({
@@ -165,14 +164,13 @@ const authController = {
       });
     }
   },
-  _getDetailUser : async (req, res) => {
+  _getDetailUser: async (req, res) => {
     try {
       const token = req.headers.authorization.slice(7);
       const decoded = jwt.verify(token, process.env.APP_SECRET_TOKEN);
-  
-      const request =
-        await database`SELECT * FROM users WHERE id = ${decoded.id}`;
-  
+
+      const request = await authModel.getDetailUser(decoded);
+
       res.status(200).json({
         status: true,
         message: "Get data success",
@@ -185,7 +183,7 @@ const authController = {
         data: [],
       });
     }
-  }
+  },
 };
 
 module.exports = authController;

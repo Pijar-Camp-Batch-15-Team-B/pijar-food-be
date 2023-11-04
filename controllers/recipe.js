@@ -38,9 +38,8 @@ const recipeController = {
   },
   _getNewRecipe: async (req, res) => {
     try {
-      const request =
-        await recipeModel.getNewRecipe();
-  
+      const request = await recipeModel.getNewRecipe();
+
       res.status(200).json({
         status: true,
         message: "Get data success",
@@ -56,9 +55,8 @@ const recipeController = {
   },
   _getLatestRecipe: async (req, res) => {
     try {
-      const request =
-        await recipeModel.getLatestRecipe();
-  
+      const request = await recipeModel.getLatestRecipe();
+
       res.status(200).json({
         status: true,
         message: "Get data success",
@@ -75,16 +73,20 @@ const recipeController = {
   _addRecipe: async (req, res) => {
     try {
       const { title, ingridients, image, video_url } = req.body;
-  
-      const request =
-        await recipeModel.addRecipe({title, ingridients, image, video_url});
-  
+
+      const request = await recipeModel.addRecipe({
+        title,
+        ingridients,
+        image,
+        video_url,
+      });
+
       if (request.length > 0) {
         res.status(201).json({
           status: true,
           message: "Insert Data Success",
         });
-  
+
         return;
       }
     } catch (error) {
@@ -94,7 +96,7 @@ const recipeController = {
         data: [],
       });
     }
-  }
+  },
 };
 
 module.exports = recipeController;

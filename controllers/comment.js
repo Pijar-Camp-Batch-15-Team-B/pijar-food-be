@@ -5,8 +5,12 @@ const commentController = {
     try {
       const { recipe_id, username, photo_profile, message } = req.body;
 
-      const request =
-        await commentModel.addComment({ recipe_id, username, photo_profile, message});
+      const request = await commentModel.addComment({
+        recipe_id,
+        username,
+        photo_profile,
+        message,
+      });
 
       if (request.length > 0) {
         res.status(201).json({
@@ -24,12 +28,11 @@ const commentController = {
       });
     }
   },
-  _getCommentByRecipe : async (req, res) => {
+  _getCommentByRecipe: async (req, res) => {
     try {
       const { id } = req.params;
-      const request =
-        await commentModel.getCommentByRecipe(id);
-  
+      const request = await commentModel.getCommentByRecipe(id);
+
       res.status(200).json({
         status: true,
         message: "Get data success",
@@ -42,7 +45,7 @@ const commentController = {
         data: [],
       });
     }
-  }
+  },
 };
 
 module.exports = commentController;
