@@ -1,14 +1,16 @@
-const database = require("../database");
+const commentModel = require("../models/comment");
 
 const commentController = {
   _addComment: async (req, res) => {
     try {
       const { recipe_id, username, photo_profile, message } = req.body;
 
-      const request =
-        await database`INSERT INTO comment (recipe_id, username, photo_profile, message)
-            values
-            (${recipe_id}, ${username}, ${photo_profile}, ${message}) RETURNING id`;
+      const request = await commentModel.addComment({
+        recipe_id,
+        username,
+        photo_profile,
+        message,
+      });
 
       if (request.length > 0) {
         res.status(201).json({
@@ -26,12 +28,11 @@ const commentController = {
       });
     }
   },
-  _getCommentByRecipe : async (req, res) => {
+  _getCommentByRecipe: async (req, res) => {
     try {
       const { id } = req.params;
-      const request =
-        await database`SELECT * FROM comment WHERE recipe_id = ${id}`;
-  
+      const request = await commentModel.getCommentByRecipe(id);
+
       res.status(200).json({
         status: true,
         message: "Get data success",
@@ -44,7 +45,7 @@ const commentController = {
         data: [],
       });
     }
-  }
+  },
 };
 
 module.exports = commentController;
