@@ -1,4 +1,4 @@
-const database = require("../database");
+const commentModel = require("../models/comment");
 
 const commentController = {
   _addComment: async (req, res) => {
@@ -6,9 +6,7 @@ const commentController = {
       const { recipe_id, username, photo_profile, message } = req.body;
 
       const request =
-        await database`INSERT INTO comment (recipe_id, username, photo_profile, message)
-            values
-            (${recipe_id}, ${username}, ${photo_profile}, ${message}) RETURNING id`;
+        await commentModel.addComment({ recipe_id, username, photo_profile, message});
 
       if (request.length > 0) {
         res.status(201).json({
@@ -30,7 +28,7 @@ const commentController = {
     try {
       const { id } = req.params;
       const request =
-        await database`SELECT * FROM comment WHERE recipe_id = ${id}`;
+        await commentModel.getCommentByRecipe(id);
   
       res.status(200).json({
         status: true,
