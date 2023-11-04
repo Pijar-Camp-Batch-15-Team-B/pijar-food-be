@@ -1,9 +1,9 @@
-const database = require("../database");
+const recipeModel = require("../models/recipe");
 
 const recipeController = {
   _getAllRecipe: async (req, res) => {
     try {
-      const request = await database`SELECT * FROM recipe`;
+      const request = await recipeModel.getAllRecipe();
 
       res.status(200).json({
         status: true,
@@ -21,7 +21,7 @@ const recipeController = {
   _getDetailRecipe: async (req, res) => {
     try {
       const { id } = req.params;
-      const request = await database`SELECT * FROM recipe WHERE id = ${id}`;
+      const request = await recipeModel.getDetailRecipe(id);
 
       res.status(200).json({
         status: true,
@@ -39,7 +39,7 @@ const recipeController = {
   _getNewRecipe: async (req, res) => {
     try {
       const request =
-        await database`SELECT * FROM recipe ORDER BY id DESC LIMIT 1`;
+        await recipeModel.getNewRecipe();
   
       res.status(200).json({
         status: true,
@@ -56,12 +56,8 @@ const recipeController = {
   },
   _getLatestRecipe: async (req, res) => {
     try {
-      const newRecipe =
-        await database`SELECT * FROM recipe ORDER BY id DESC LIMIT 1`;
-      const newRecipeId = newRecipe[0].id;
-  
       const request =
-        await database`SELECT * FROM recipe WHERE id < ${newRecipeId} ORDER BY id DESC`;
+        await recipeModel.getLatestRecipe();
   
       res.status(200).json({
         status: true,
@@ -81,9 +77,7 @@ const recipeController = {
       const { title, ingridients, image, video_url } = req.body;
   
       const request =
-        await database`INSERT INTO recipe (title, ingridients, image, video_url)
-        values
-        (${title}, ${ingridients}, ${image}, ${video_url}) RETURNING id`;
+        await recipeModel.addRecipe({title, ingridients, image, video_url});
   
       if (request.length > 0) {
         res.status(201).json({
