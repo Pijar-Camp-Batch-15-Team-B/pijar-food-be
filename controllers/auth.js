@@ -44,7 +44,7 @@ const authController = {
       });
     }
   },
-  _inputValidation: async (req, res, next) => {
+  _inputValidationRegist: async (req, res, next) => {
     const schema = new Validator(req.body, {
       username: "required|minLength:1|maxLength:100",
       email: "required|email",

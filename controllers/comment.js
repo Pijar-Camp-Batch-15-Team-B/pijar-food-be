@@ -1,6 +1,28 @@
 const commentModel = require("../models/comment");
 
+const { Validator } = require("node-input-validator");
+
 const commentController = {
+  _inputValidaion: async (req, res, next) => {
+    const schema = new Validator(req.body, {
+      recipe_id: "required|minLength:1",
+      username: "required|minLength:1",
+      photo_profile: "required|minLength:1",
+      message: "required|minLength:5",
+    });
+
+    schema.check().then((matched) => {
+      if (!matched) {
+        res.status(422).send({
+          status: false,
+          message: schema.errors,
+          data: null,
+        });
+      } else {
+        next();
+      }
+    });
+  },
   _addComment: async (req, res) => {
     try {
       const { recipe_id, username, photo_profile, message } = req.body;
