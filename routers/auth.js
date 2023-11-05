@@ -12,7 +12,7 @@ router.get("/users", authController._getAllUser);
 // Register
 router.post(
   "/users/register",
-  authController._inputValidation,
+  authController._inputValidationRegist,
   authController._regist
 );
 

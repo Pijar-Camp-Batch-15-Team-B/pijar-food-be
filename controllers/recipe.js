@@ -1,5 +1,7 @@
 const recipeModel = require("../models/recipe");
 
+const { Validator } = require("node-input-validator");
+
 const recipeController = {
   _getAllRecipe: async (req, res) => {
     try {
@@ -69,6 +71,26 @@ const recipeController = {
         data: [],
       });
     }
+  },
+  _inputValidaion: async (req, res, next) => {
+    const schema = new Validator(req.body, {
+      title: "required|minLength:5|maxLength:100",
+      ingridients: "required|minLength:10",
+      image: "required|url",
+      video_url: "required|url",
+    });
+
+    schema.check().then((matched) => {
+      if (!matched) {
+        res.status(422).send({
+          status: false,
+          message: schema.errors,
+          data: null,
+        });
+      } else {
+        next();
+      }
+    });
   },
   _addRecipe: async (req, res) => {
     try {
