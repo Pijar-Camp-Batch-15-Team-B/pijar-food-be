@@ -1,0 +1,286 @@
+{
+	"info": {
+		"_postman_id": "28fe1364-65f7-4ee5-9e75-c2314ad716b6",
+		"name": "Pijar Food",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "30077645"
+	},
+	"item": [
+		{
+			"name": "Recipe",
+			"item": [
+				{
+					"name": "Get all recipe",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/recipe",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"recipe"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get detail recipe",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/recipe/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"recipe",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get new recipe",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/newRecipe",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"newRecipe"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add recipe",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Talam labu kuning\",\r\n    \"ingridients\":\"150 gr labu kuning, 75 gr gula pasir, 75 gr tepung tapioka, 25 gr tepung beras, 150 ml santan, 1/4 sdr garam, Bahan lapisan putih, 100 ml santan, 20 tepung beras, 15 tepung tapioka, 1/4 sdt garam\",\r\n    \"image\":\"https://img-global.cpcdn.com/recipes/f937b5eae0c41569/1360x964cq70/talam-labu-kuning-foto-resep-utama.webp\",\r\n    \"video_url\": \"https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstley\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/recipe",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"recipe"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get lates recipe",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/latestRecipe",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"latestRecipe"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Comment",
+			"item": [
+				{
+					"name": "Create comment",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"recipe_id\": \"3\",\r\n    \"username\":\"Yongki\",\r\n    \"photo_profile\":\"https://img.freepik.com/premium-vector/man-avatar-profile-picture-vector-illustration_268834-538.jpg\",\r\n    \"message\": \"keren enak banget pokoknya makanan ini, berhubung aku suka pedas jadinya aku sangat merekomendasikan makanan ini buat para pecinta rasa pedas\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/comment",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"comment"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get comment by recipe_id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/recipe/comment/6",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"recipe",
+								"comment",
+								"6"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "List Users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/users",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Detail Profile",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTYsInVzZXJuYW1lIjoicmF5aGFuIiwicGhvbmVfbnVtYmVyIjoiMDg5NzgzMzU1NTIiLCJlbWFpbCI6InJheWhhbmFqYWhAZ21haWwuY29tIiwicGFzc3dvcmQiOiIkMmIkMTAkbnRadVFGMFNwbGNSS3MyUHFaYmh4dXdVdkdBckI4OXl1MlM0TVJqdGhLV3NRSGViTEcyVUsiLCJwaG90b19wcm9maWxlIjpudWxsLCJpYXQiOjE2OTkwMzkyMjl9.T8Zd5U0IxBWb-aYti3fCXJKpmNTgSI6vKxJ8Zh9wr9Y",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/users/me",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"users",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\":\"rayhan\",\r\n    \"phone_number\": \"08978335552\",\r\n    \"email\": \"rayhangt89@gmail.com\",\r\n    \"password\": \"inipasswordrayhan\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/users/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"users",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"rayhangt89@gmail.com\",\r\n    \"password\": \"inipasswordrayhan\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/users/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
