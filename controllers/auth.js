@@ -187,8 +187,6 @@ const authController = {
   _validationEditProfile: async (req, res, next) => {
     const schema = new Validator(req.body, {
       username: "required|minLength:1|maxLength:100",
-      phone_number: "required|phoneNumber",
-      email: "required|email",
       photo_profile: "required|url",
     });
 
@@ -210,7 +208,7 @@ const authController = {
       const decoded = jwt.verify(token, process.env.APP_SECRET_TOKEN);
       const { id } = decoded;
 
-      const columns = ["username", "phone_number", "email", "photo_profile"];
+      const columns = ["username", "photo_profile"];
 
       const request = await authModel.editProfile(req.body, columns, id);
 
