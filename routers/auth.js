@@ -26,4 +26,12 @@ router.post(
 // Get detail user
 router.get("/users/me", checkJwt, authController._getDetailUser);
 
+// Edit Profile (/users/edit)
+router.put(
+  "/users/edit",
+  checkJwt,
+  authController._validationEditProfile,
+  authController._editProfile
+);
+
 module.exports = router;
