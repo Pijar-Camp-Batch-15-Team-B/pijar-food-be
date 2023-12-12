@@ -37,6 +37,12 @@ const modelAuth = {
 
     return request;
   },
+  editPhotoProfile: async (data) =>{
+    const { photo_profile, id } = data;
+    const request = await database`UPDATE users SET photo_profile=${photo_profile} WHERE id =${id} RETURNING id`
+
+    return request;
+  }
 };
 
 module.exports = modelAuth;

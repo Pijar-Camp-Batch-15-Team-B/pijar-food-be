@@ -2,6 +2,8 @@ const router = require("express").Router();
 
 const authController = require("../controllers/auth");
 
+const upload = require("../middleware/upload");
+
 // Middleware Function
 const checkJwt = authController._checkJwt;
 
@@ -33,5 +35,7 @@ router.put(
   authController._validationEditProfile,
   authController._editProfile
 );
+
+router.post("/users/edit/photo", upload, authController._editPhotoProfile);
 
 module.exports = router;

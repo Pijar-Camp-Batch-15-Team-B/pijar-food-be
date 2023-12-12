@@ -12,6 +12,8 @@ const recipeRouter = require("./src/routers/recipe");
 const commentRouter = require("./src/routers/comment");
 const authRouter = require("./src/routers/auth");
 
+app.use("/img", express.static("src/upload"));
+
 // grant access for express can accept input from outside
 app.use(express.urlencoded({ extended: false }));
 
@@ -102,3 +104,5 @@ app.post("/register", async (req, res) => {
 app.listen(port, () => {
   console.log(`Example app listening on http//:localhost:${port}`);
 });
+
+
