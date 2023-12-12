@@ -3,6 +3,7 @@ const authModel = require("../models/auth");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { Validator } = require("node-input-validator");
+const cloudinary = require("../middleware/cloudinary");
 
 const authController = {
   _checkJwt: async (req, res, next) => {
@@ -210,7 +211,7 @@ const authController = {
       const decoded = jwt.verify(token, process.env.APP_SECRET_TOKEN);
       const { id } = decoded;
 
-      const columns = ["photo_profile", "username", "email", "phone_number"];
+      const columns = ["username", "email", "phone_number"];
 
       const request = await authModel.editProfile(req.body, columns, id);
 
@@ -229,6 +230,37 @@ const authController = {
         message: "Something wrong in our server",
         data: [],
       });
+    }
+  },
+  _editPhotoProfile: async (req, res) => {
+    try {
+      const token = req.headers.authorization.slice(7);
+      const decoded = jwt.verify(token, process.env.APP_SECRET_TOKEN);
+      const { id } = decoded;
+      const result = await cloudinary.uploader.upload(req.file.path, {
+        folder:"users-profile"
+      });
+      const photo_profile = result.secure_url;
+
+      const request = await authModel.editPhotoProfile({ photo_profile, id });
+
+      console.log(request);
+
+      res.status(200).json({
+        status: 200,
+        message: "Image Uploaded",
+      });
+    } catch (error) {
+      console.log(error);
+
+      if (error.status === 400) {
+        //
+      } else {
+        res.status(500).json({
+          status: 500,
+          message: "internal app error",
+        });
+      }
     }
   },
 };
