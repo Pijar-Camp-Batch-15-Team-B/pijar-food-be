@@ -8,9 +8,9 @@ const helmet = require("helmet");
 const nodemailer = require("nodemailer");
 
 //import router
-const recipeRouter = require("./src/routers/recipe");
-const commentRouter = require("./src/routers/comment");
-const authRouter = require("./src/routers/auth");
+const recipeRouter = require("./src/Routers/recipe");
+const commentRouter = require("./src/Routers/comment");
+const authRouter = require("./src/Routers/auth");
 
 app.use("/img", express.static("src/upload"));
 

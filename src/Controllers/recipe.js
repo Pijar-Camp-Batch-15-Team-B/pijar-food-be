@@ -1,4 +1,4 @@
-const recipeModel = require("../models/recipe");
+const recipeModel = require("../Models/recipe");
 
 const { Validator } = require("node-input-validator");
 

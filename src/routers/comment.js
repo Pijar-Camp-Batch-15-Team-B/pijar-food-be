@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const commentController = require("../controllers/comment");
+const commentController = require("../Controllers/comment");
 
 //ENDPOINT COMMENT
 //Add comment

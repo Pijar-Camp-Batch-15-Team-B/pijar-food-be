@@ -1,6 +1,6 @@
 const multer = require("multer");
-const { failed } = require("../helper/common.js");
-// manajemen file
+const { failed } = require("../Helper/common.js");
+// File management
 const multerUpload = multer({
   storage: multer.diskStorage({}),
   fileFilter: (req, file, cb) => {
@@ -27,7 +27,7 @@ const multerUpload = multer({
   },
 });
 
-// middleware
+// Middleware
 const upload = (req, res, next) => {
   const multerSingle = multerUpload.single("photo_profile");
   multerSingle(req, res, (err) => {

@@ -1,9 +1,9 @@
-const authModel = require("../models/auth");
+const authModel = require("../Models/auth");
 
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { Validator } = require("node-input-validator");
-const cloudinary = require("../middleware/cloudinary");
+const cloudinary = require("../Middleware/cloudinary");
 
 const authController = {
   _checkJwt: async (req, res, next) => {
