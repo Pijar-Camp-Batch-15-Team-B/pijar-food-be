@@ -8,11 +8,9 @@ const helmet = require("helmet");
 const nodemailer = require("nodemailer");
 
 //import router
-const recipeRouter = require("./src/routers/recipe");
-const commentRouter = require("./src/routers/comment");
-const authRouter = require("./src/routers/auth");
-
-app.use("/img", express.static("src/upload"));
+const recipeRouter = require("./src/Routers/recipe");
+const commentRouter = require("./src/Routers/comment");
+const authRouter = require("./src/Routers/auth");
 
 // grant access for express can accept input from outside
 app.use(express.urlencoded({ extended: false }));
@@ -30,9 +28,16 @@ app.use(
 
 // using helmet
 app.use(helmet());
+
+// Routes
 app.use(recipeRouter);
 app.use(commentRouter);
 app.use(authRouter);
+
+// Home
+app.get("/", (req, res) => {
+  res.send("API For Food Recipe");
+});
 
 // Nodemailer
 const transporter = nodemailer.createTransport({
@@ -104,5 +109,3 @@ app.post("/register", async (req, res) => {
 app.listen(port, () => {
   console.log(`Example app listening on http//:localhost:${port}`);
 });
-
-

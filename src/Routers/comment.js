@@ -1,0 +1,15 @@
+const router = require("express").Router();
+const commentController = require("../Controllers/comment");
+
+//ENDPOINT COMMENT
+//Add comment
+router.post(
+  "/comment",
+  commentController._inputValidaion,
+  commentController._addComment
+);
+
+//Get comment by recipe id
+router.get("/recipe/comment/:id", commentController._getCommentByRecipe);
+
+module.exports = router;

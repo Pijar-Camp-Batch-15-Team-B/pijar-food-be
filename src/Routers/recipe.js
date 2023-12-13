@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const recipeController = require("../controllers/recipe");
+const recipeController = require("../Controllers/recipe");
 
 // ENDPOINT RECIPE
 // Get All recipe
