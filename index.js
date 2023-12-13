@@ -8,9 +8,9 @@ const helmet = require("helmet");
 const nodemailer = require("nodemailer");
 
 //import router
-const recipeRouter = require("./Routers/recipe");
-const commentRouter = require("./Routers/comment");
-const authRouter = require("./Routers/auth");
+const recipeRouter = require("./src/Routers/recipe");
+const commentRouter = require("./src/Routers/comment");
+const authRouter = require("./src/Routers/auth");
 
 // grant access for express can accept input from outside
 app.use(express.urlencoded({ extended: false }));
