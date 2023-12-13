@@ -1,8 +1,8 @@
 const router = require("express").Router();
 
-const authController = require("../controllers/auth");
+const authController = require("../Controllers/auth");
 
-const upload = require("../middleware/upload");
+const upload = require("../Middleware/upload");
 
 // Middleware Function
 const checkJwt = authController._checkJwt;

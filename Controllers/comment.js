@@ -1,4 +1,4 @@
-const commentModel = require("../models/comment");
+const commentModel = require("../Models/comment");
 
 const { Validator } = require("node-input-validator");
 

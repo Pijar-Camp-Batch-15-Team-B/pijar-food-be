@@ -1,9 +1,9 @@
-const authModel = require("../models/auth");
+const authModel = require("../Models/auth");
 
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { Validator } = require("node-input-validator");
-const cloudinary = require("../middleware/cloudinary");
+const cloudinary = require("../Middleware/cloudinary");
 
 const authController = {
   _checkJwt: async (req, res, next) => {
@@ -238,7 +238,7 @@ const authController = {
       const decoded = jwt.verify(token, process.env.APP_SECRET_TOKEN);
       const { id } = decoded;
       const result = await cloudinary.uploader.upload(req.file.path, {
-        folder:"users-profile"
+        folder: "users-profile",
       });
       const photo_profile = result.secure_url;
 
