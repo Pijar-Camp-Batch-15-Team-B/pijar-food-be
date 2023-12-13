@@ -3,9 +3,13 @@
   "version": "1.0.0",
   "description": "Project Team from Pijar Camp Bootcamp",
   "main": "index.js",
+  "engines": {
+    "node": "18.x"
+  },
   "scripts": {
     "dev": "nodemon index.js",
-    "start": "node index.js"
+    "start": "node index.js",
+    "server": "nodemon ./index.js"
   },
   "repository": {
     "type": "git",
