@@ -8,7 +8,6 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npm install; npm run build",
     "start": "npm run start",
     "server": "node index.js",
     "dev": "nodemon index.js"
