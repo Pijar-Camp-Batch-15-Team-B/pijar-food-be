@@ -46,10 +46,14 @@ Front-End Developer
 - Ainul Yaqin - [Github Profile](https://github.com/yaaqin "Ainul Yaqin")
 - Aulia Ramadhan - [Github Profile](https://github.com/sayarama "Aulia Ramadhan")
 
-## Link
+## Documentation
+
+Documentation files are provided in the [docs](./docs) folder
+
+API endpoint list are also available as published postman documentation
+
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://documenter.getpostman.com/view/30079177/2s9YkodgjS)
 
 - Back-End Deployment [Pijar Food](https://recipe-web-be-b.onrender.com// "Pijar Food")
 
 - Front-End Repository [Github Repository](https://github.com/Pijar-Camp-Batch-15-Team-B/pijar-food-fe "Pijar Food Front-End Repository")
-
-## Screenshot
